@@ -1,12 +1,30 @@
 ﻿<Window x:Class="ReferenceBrowser.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ReferenceBrowser"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        xmlns:vm="clr-namespace:ReferenceBrowser.ViewModels"
+        Title="Solution Reference Browser" Height="350" Width="525">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel LastChildFill="True" Margin="5">
+        <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+            <TextBlock DockPanel.Dock="Left">Solution file:</TextBlock>
+            <Button DockPanel.Dock="Right" Command="{Binding BrowseSolutionFile}">...</Button>
+            <TextBox Text="{Binding SolutionFilePath, UpdateSourceTrigger=PropertyChanged}"/>
+        </DockPanel>
+        <Button DockPanel.Dock="Top" Command="{Binding OpenSolutionFile}">Open</Button>
+
+        <TreeView/>
+    </DockPanel>
 </Window>
