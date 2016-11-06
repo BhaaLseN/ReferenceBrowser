@@ -125,6 +125,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\Nodes\DocumentNode.cs" />
+    <Compile Include="ViewModels\Nodes\FolderNode.cs" />
+    <Compile Include="ViewModels\Nodes\NodeBase.cs" />
+    <Compile Include="ViewModels\Nodes\ProjectNode.cs" />
+    <Compile Include="ViewModels\Nodes\SolutionNode.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -169,6 +174,13 @@
   <ItemGroup>
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\16x16\CSharpFile.png" />
+    <Resource Include="images\16x16\CSharpProject.png" />
+    <Resource Include="images\16x16\Solution.png" />
+    <Resource Include="images\16x16\FolderClosed.png" />
+    <Resource Include="images\16x16\FolderOpen.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,7 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.Win32;
+using ReferenceBrowser.ViewModels.Nodes;
 
 namespace ReferenceBrowser.ViewModels
 {
@@ -19,6 +25,13 @@ namespace ReferenceBrowser.ViewModels
                 if (Set(ref _solutionFilePath, value))
                     OpenSolutionFile.RaiseCanExecuteChanged();
             }
+        }
+
+        private NodeBase[] _rootNodes;
+        public NodeBase[] RootNodes
+        {
+            get { return _rootNodes; }
+            set { Set(ref _rootNodes, value); }
         }
 
         public MainViewModel()
@@ -42,11 +55,15 @@ namespace ReferenceBrowser.ViewModels
             if (ofd.ShowDialog().GetValueOrDefault())
             {
                 SolutionFilePath = ofd.FileName;
+                Task.Run(new Action(OnOpenSolutionFile));
             }
         }
-        private void OnOpenSolutionFile()
+        private async void OnOpenSolutionFile()
         {
-            // TODO: load SolutionFilePath and create a tree
+            var solutionWorkspace = MSBuildWorkspace.Create();
+            var solution = await solutionWorkspace.OpenSolutionAsync(SolutionFilePath);
+            var solutionNode = new SolutionNode(solution);
+            RootNodes = new[] { solutionNode };
         }
         private bool CanOpenSolutionFile()
         {
