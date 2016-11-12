@@ -9,22 +9,21 @@ namespace ReferenceBrowser.ViewModels.Nodes
 {
     public class SolutionNode : NodeBase
     {
-        private readonly Solution _solution;
-
+        public Solution Solution { get; }
         public SolutionNode(Solution solution)
             : base($"Solution '{Path.GetFileNameWithoutExtension(solution?.FilePath)}' ({solution?.Projects.Count()} project(s))")
         {
-            _solution = solution;
+            Solution = solution;
             Task.Run(new Action(PopulateProjects));
         }
 
         private void PopulateProjects()
         {
-            if (_solution == null)
+            if (Solution == null)
                 return;
 
             var projects = new List<ProjectNode>();
-            foreach (var solutionProject in _solution.Projects)
+            foreach (var solutionProject in Solution.Projects)
             {
                 var project = new ProjectNode(solutionProject);
                 projects.Add(project);

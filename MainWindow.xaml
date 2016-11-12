@@ -24,7 +24,29 @@
             <Button DockPanel.Dock="Right" Command="{Binding BrowseSolutionFile}">...</Button>
             <TextBox Text="{Binding SolutionFilePath, UpdateSourceTrigger=PropertyChanged}"/>
         </DockPanel>
-        <Button DockPanel.Dock="Top" Command="{Binding OpenSolutionFile}">Open</Button>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <Button Command="{Binding OpenSolutionFile}">Open</Button>
+            <Button Command="{Binding RunUnusedSolutionAnalysis}">Analyze Unused Members</Button>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="0">
+                <TextBlock Text="{Binding StatusText}"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1">
+                <ProgressBar Minimum="0" Maximum="100" Width="150" Height="16" Value="{Binding StatusPercentage}"/>
+            </StatusBarItem>
+        </StatusBar>
 
         <TreeView ItemsSource="{Binding RootNodes}">
             <TreeView.Resources>
@@ -55,6 +77,13 @@
                 <HierarchicalDataTemplate DataType="{x:Type node:DocumentNode}" ItemsSource="{Binding ChildNodes}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="images/16x16/CSharpFile.png"/>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                
+                <HierarchicalDataTemplate DataType="{x:Type node:ReferenceSymbolNode}" ItemsSource="{Binding ChildNodes}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="images/16x16/Unknown.png"/>
                         <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>

@@ -129,6 +129,7 @@
     <Compile Include="ViewModels\Nodes\FolderNode.cs" />
     <Compile Include="ViewModels\Nodes\NodeBase.cs" />
     <Compile Include="ViewModels\Nodes\ProjectNode.cs" />
+    <Compile Include="ViewModels\Nodes\ReferenceSymbolNode.cs" />
     <Compile Include="ViewModels\Nodes\SolutionNode.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -181,6 +182,9 @@
     <Resource Include="images\16x16\Solution.png" />
     <Resource Include="images\16x16\FolderClosed.png" />
     <Resource Include="images\16x16\FolderOpen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\16x16\Unknown.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

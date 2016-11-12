@@ -4,12 +4,12 @@ namespace ReferenceBrowser.ViewModels.Nodes
 {
     public class DocumentNode : NodeBase
     {
-        private readonly Document _document;
+        public Document Document { get; }
 
         public DocumentNode(Document document)
             : base(document?.Name)
         {
-            _document = document;
+            Document = document;
         }
     }
 }
