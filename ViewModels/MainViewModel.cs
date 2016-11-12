@@ -133,7 +133,24 @@ namespace ReferenceBrowser.ViewModels
                         continue;
                     // exclude the current document to limit the search to "external" references;
                     // this assumes one class per file (otherwise results will be missing)
-                    var allReferenceSymbols = await SymbolFinder.FindReferencesAsync(symbol, solution, documentsExceptSelf);
+                    IEnumerable<ReferencedSymbol> allReferenceSymbols;
+                    // sometimes, FindReferencesAsync throws an InvalidOperationException telling us that
+                    // "we should never reach here".
+                    // assuming this has to do with not being thread safe or so, we'll just try again.
+                    int retryCount = 3;
+                    while (true)
+                    {
+                        try
+                        {
+                            allReferenceSymbols = await SymbolFinder.FindReferencesAsync(symbol, solution, documentsExceptSelf);
+                            break;
+                        }
+                        catch (InvalidOperationException)
+                        {
+                        }
+                        if (retryCount --> 0)
+                            return;
+                    }
                     // it will still return matches inside the document (since there are members inside it),
                     // but their locations will be empty.
                     // TODO: search all documents and simply exclude the ones from the same class
