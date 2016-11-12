@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.CodeAnalysis;
@@ -22,6 +23,7 @@ namespace ReferenceBrowser.ViewModels
         public RelayCommand OpenSolutionFile { get; }
         public RelayCommand RunUnusedSolutionAnalysis { get; }
 
+        private readonly Dispatcher _dispatcher;
         private string _solutionFilePath;
         public string SolutionFilePath
         {
@@ -29,7 +31,7 @@ namespace ReferenceBrowser.ViewModels
             set
             {
                 if (Set(ref _solutionFilePath, value))
-                    OpenSolutionFile.RaiseCanExecuteChanged();
+                    _dispatcher.Invoke(() => OpenSolutionFile.RaiseCanExecuteChanged());
             }
         }
 
@@ -50,14 +52,19 @@ namespace ReferenceBrowser.ViewModels
         public NodeBase[] RootNodes
         {
             get { return _rootNodes; }
-            set { Set(ref _rootNodes, value); }
+            set
+            {
+                if (Set(ref _rootNodes, value))
+                    _dispatcher.Invoke(() => RunUnusedSolutionAnalysis.RaiseCanExecuteChanged());
+            }
         }
 
         public MainViewModel()
         {
             BrowseSolutionFile = new RelayCommand(OnBrowseSolutionFile);
             OpenSolutionFile = new RelayCommand(OnOpenSolutionFile, CanOpenSolutionFile);
-            RunUnusedSolutionAnalysis = new RelayCommand(OnRunUnusedSolutionAnalysis);
+            RunUnusedSolutionAnalysis = new RelayCommand(OnRunUnusedSolutionAnalysis, CanRunUnusedSolutionAnalysis);
+            _dispatcher = Dispatcher.CurrentDispatcher;
         }
         private void OnBrowseSolutionFile()
         {
@@ -96,6 +103,10 @@ namespace ReferenceBrowser.ViewModels
             // at this point, we only care about types being declared
             return !new[] { SymbolKind.NamedType }
                 .Contains(symbol.Kind);
+        }
+        private bool CanRunUnusedSolutionAnalysis()
+        {
+            return RootNodes != null && RootNodes.Any();
         }
         private void OnRunUnusedSolutionAnalysis()
         {
