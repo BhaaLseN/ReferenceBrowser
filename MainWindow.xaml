@@ -102,7 +102,13 @@
                     <dock:LayoutAnchorSide>
                         <dock:LayoutAnchorGroup>
                             <dock:LayoutAnchorable Title="Analysis Results">
-                                <ListView/>
+                                <ListView ItemsSource="{Binding AnalysisResults}">
+                                    <ListView.Resources>
+                                        <DataTemplate DataType="{x:Type node:ReferenceSymbolNode}">
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </DataTemplate>
+                                    </ListView.Resources>
+                                </ListView>
                             </dock:LayoutAnchorable>
                         </dock:LayoutAnchorGroup>
                     </dock:LayoutAnchorSide>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -57,6 +58,12 @@ namespace ReferenceBrowser.ViewModels
                 if (Set(ref _rootNodes, value))
                     _dispatcher.Invoke(() => RunUnusedSolutionAnalysis.RaiseCanExecuteChanged());
             }
+        }
+        private NodeBase[] _analysisResults;
+        public NodeBase[] AnalysisResults
+        {
+            get { return _analysisResults; }
+            set { Set(ref _analysisResults, value); }
         }
 
         public MainViewModel()
@@ -119,6 +126,7 @@ namespace ReferenceBrowser.ViewModels
             int currentSymbol = 0;
             StatusText = $"{currentSymbol}/{documentSet.Count}";
             StatusPercentage = 0;
+            var interrestingSymbols = new ConcurrentBag<NodeBase>();
             await ParallelForEachAsync(documentNodes, async documentNode =>
             {
                 var document = documentNode.Document;
@@ -156,12 +164,17 @@ namespace ReferenceBrowser.ViewModels
                     // TODO: search all documents and simply exclude the ones from the same class
                     //        to allow more than one class per file.
                     var referenceSymbols = allReferenceSymbols.Where(r => r.Locations.Any()).ToArray();
-                    documentReferences.Add(new ReferenceSymbolNode(symbol, referenceSymbols));
+                    var reference = new ReferenceSymbolNode(symbol, referenceSymbols);
+                    documentReferences.Add(reference);
+                    if (reference.ReferenceCount < 2)
+                        interrestingSymbols.Add(reference);
                 }
                 // keep all existing nodes, except the reference nodes from a previous run
                 documentNode.ChildNodes = documentNode.ChildNodes.Except(documentNode.ChildNodes.OfType<ReferenceSymbolNode>()).Concat(documentReferences).ToArray();
                 IncrementStatus(documentSet, ref currentSymbol);
             });
+
+            AnalysisResults = interrestingSymbols.ToArray();
 
             StatusText = "Done.";
             StatusPercentage = 0;

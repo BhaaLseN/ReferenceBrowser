@@ -9,12 +9,14 @@ namespace ReferenceBrowser.ViewModels.Nodes
     {
         public ISymbol Symbol { get; }
         public IEnumerable<ReferencedSymbol> ReferenceSymbols { get; }
+        public int ReferenceCount { get; }
 
         public ReferenceSymbolNode(ISymbol symbol, IEnumerable<ReferencedSymbol> referenceSymbols)
             : base($"{symbol?.Name} ({symbol?.Kind}, {referenceSymbols?.Sum(r => r.Locations.Count())} References)")
         {
             Symbol = symbol;
             ReferenceSymbols = referenceSymbols;
+            ReferenceCount = referenceSymbols?.Sum(r => r.Locations.Count()) ?? 0;
         }
     }
 }
