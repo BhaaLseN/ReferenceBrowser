@@ -108,7 +108,7 @@ namespace ReferenceBrowser.ViewModels
         {
             return RootNodes != null && RootNodes.Any();
         }
-        private void OnRunUnusedSolutionAnalysis()
+        private async void OnRunUnusedSolutionAnalysis()
         {
             var solutionNode = RootNodes?.OfType<SolutionNode>().FirstOrDefault();
             if (solutionNode == null)
@@ -119,7 +119,7 @@ namespace ReferenceBrowser.ViewModels
             int currentSymbol = 0;
             StatusText = $"{currentSymbol}/{documentSet.Count}";
             StatusPercentage = 0;
-            Parallel.ForEach(documentNodes, async documentNode =>
+            await ParallelForEachAsync(documentNodes, async documentNode =>
             {
                 var document = documentNode.Document;
                 var documentsExceptSelf = documentSet.Except(new[] { document });
@@ -162,6 +162,9 @@ namespace ReferenceBrowser.ViewModels
                 documentNode.ChildNodes = documentNode.ChildNodes.Except(documentNode.ChildNodes.OfType<ReferenceSymbolNode>()).Concat(documentReferences).ToArray();
                 IncrementStatus(documentSet, ref currentSymbol);
             });
+
+            StatusText = "Done.";
+            StatusPercentage = 0;
         }
 
         private void IncrementStatus(ImmutableHashSet<Document> documentSet, ref int currentSymbol)
@@ -183,6 +186,11 @@ namespace ReferenceBrowser.ViewModels
                 foreach (var childDocumentNode in GetAllSelectedDocumentNodes(node.ChildNodes))
                     yield return childDocumentNode;
             }
+        }
+
+        private static Task ParallelForEachAsync<T>(IEnumerable<T> source, Func<T, Task> body)
+        {
+            return Task.WhenAll(source.Select(item => Task.Run(() => body(item))));
         }
     }
 }
