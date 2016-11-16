@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:ReferenceBrowser.ViewModels"
         xmlns:node="clr-namespace:ReferenceBrowser.ViewModels.Nodes"
+        xmlns:dock="http://schemas.xceed.com/wpf/xaml/avalondock"
         Title="Solution Reference Browser" Height="350" Width="525">
     <Window.DataContext>
         <vm:MainViewModel/>
@@ -48,46 +49,65 @@
             </StatusBarItem>
         </StatusBar>
 
-        <TreeView ItemsSource="{Binding RootNodes}">
-            <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type node:SolutionNode}" ItemsSource="{Binding ChildNodes}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="images/16x16/Solution.png"/>
-                        <TextBlock Text="{Binding Name}"/>
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type node:ProjectNode}" ItemsSource="{Binding ChildNodes}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="images/16x16/CSharpProject.png"/>
-                        <TextBlock Text="{Binding Name}"/>
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type node:FolderNode}" ItemsSource="{Binding ChildNodes}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image x:Name="image" Source="images/16x16/FolderClosed.png"/>
-                        <TextBlock Text="{Binding Name}"/>
-                    </StackPanel>
+        <dock:DockingManager>
+            <dock:LayoutRoot>
+                <dock:LayoutPanel>
+                    <dock:LayoutDocumentPane>
+                        <dock:LayoutDocument Title="Solution" CanClose="False" CanFloat="False">
+                            <TreeView ItemsSource="{Binding RootNodes}">
+                                <TreeView.Resources>
+                                    <HierarchicalDataTemplate DataType="{x:Type node:SolutionNode}" ItemsSource="{Binding ChildNodes}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="images/16x16/Solution.png"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                    <HierarchicalDataTemplate DataType="{x:Type node:ProjectNode}" ItemsSource="{Binding ChildNodes}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="images/16x16/CSharpProject.png"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                    <HierarchicalDataTemplate DataType="{x:Type node:FolderNode}" ItemsSource="{Binding ChildNodes}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image x:Name="image" Source="images/16x16/FolderClosed.png"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </StackPanel>
 
-                    <HierarchicalDataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}" Value="True">
-                            <Setter TargetName="image" Property="Source" Value="images/16x16/FolderOpen.png"/>
-                        </DataTrigger>
-                    </HierarchicalDataTemplate.Triggers>
-                </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type node:DocumentNode}" ItemsSource="{Binding ChildNodes}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="images/16x16/CSharpFile.png"/>
-                        <TextBlock Text="{Binding Name}"/>
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-                
-                <HierarchicalDataTemplate DataType="{x:Type node:ReferenceSymbolNode}" ItemsSource="{Binding ChildNodes}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="images/16x16/Unknown.png"/>
-                        <TextBlock Text="{Binding Name}"/>
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.Resources>
-        </TreeView>
+                                        <HierarchicalDataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=TreeViewItem}, Path=IsExpanded}" Value="True">
+                                                <Setter TargetName="image" Property="Source" Value="images/16x16/FolderOpen.png"/>
+                                            </DataTrigger>
+                                        </HierarchicalDataTemplate.Triggers>
+                                    </HierarchicalDataTemplate>
+                                    <HierarchicalDataTemplate DataType="{x:Type node:DocumentNode}" ItemsSource="{Binding ChildNodes}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="images/16x16/CSharpFile.png"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+
+                                    <HierarchicalDataTemplate DataType="{x:Type node:ReferenceSymbolNode}" ItemsSource="{Binding ChildNodes}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="images/16x16/Unknown.png"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.Resources>
+                            </TreeView>
+                        </dock:LayoutDocument>
+                    </dock:LayoutDocumentPane>
+                </dock:LayoutPanel>
+                <dock:LayoutRoot.BottomSide>
+                    <dock:LayoutAnchorSide>
+                        <dock:LayoutAnchorGroup>
+                            <dock:LayoutAnchorable Title="Analysis Results">
+                                <ListView/>
+                            </dock:LayoutAnchorable>
+                        </dock:LayoutAnchorGroup>
+                    </dock:LayoutAnchorSide>
+                </dock:LayoutRoot.BottomSide>
+            </dock:LayoutRoot>
+        </dock:DockingManager>
     </DockPanel>
 </Window>
