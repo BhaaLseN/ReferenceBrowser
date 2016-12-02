@@ -127,7 +127,7 @@ namespace ReferenceBrowser.ViewModels
             StatusText = $"{currentSymbol}/{documentSet.Count}";
             StatusPercentage = 0;
             var interrestingSymbols = new ConcurrentBag<NodeBase>();
-            await ParallelForEachAsync(documentNodes, async documentNode =>
+            await ForEachDocument(documentNodes, async documentNode =>
             {
                 var document = documentNode.Document;
                 var documentsExceptSelf = documentSet.Except(new[] { document });
@@ -201,9 +201,11 @@ namespace ReferenceBrowser.ViewModels
             }
         }
 
-        private static Task ParallelForEachAsync<T>(IEnumerable<T> source, Func<T, Task> body)
+        private static async Task ForEachDocument<T>(IEnumerable<T> source, Func<T, Task> body)
         {
-            return Task.WhenAll(source.Select(item => Task.Run(() => body(item))));
+            foreach (T document in source)
+                await body(document);
+            //return Task.WhenAll(source.Select(item => Task.Run(() => body(item))));
         }
     }
 }
