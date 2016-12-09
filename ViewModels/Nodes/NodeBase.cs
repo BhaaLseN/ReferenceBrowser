@@ -1,3 +1,4 @@
+using System;
 using GalaSoft.MvvmLight;
 
 namespace ReferenceBrowser.ViewModels.Nodes
@@ -15,8 +16,20 @@ namespace ReferenceBrowser.ViewModels.Nodes
         public NodeBase[] ChildNodes
         {
             get { return _childNodes; }
-            set { Set(ref _childNodes, value ?? new NodeBase[0]); }
+            set
+            {
+                if (Set(ref _childNodes, value ?? new NodeBase[0]))
+                    Array.ForEach(_childNodes, n => n.ParentNode = this);
+            }
         }
+
+        private NodeBase _parentNode;
+        public NodeBase ParentNode
+        {
+            get { return _parentNode; }
+            set { Set(ref _parentNode, value); }
+        }
+
         protected NodeBase(string name)
         {
             Name = name;
