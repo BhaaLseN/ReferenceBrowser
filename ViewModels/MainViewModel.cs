@@ -191,7 +191,7 @@ namespace ReferenceBrowser.ViewModels
         {
             if (nodes == null)
                 yield break;
-            foreach (var node in nodes)
+            foreach (var node in nodes.Where(n => n.IsChecked.IsNotFalse()))
             {
                 var documentNode = node as DocumentNode;
                 if (documentNode?.Document != null)

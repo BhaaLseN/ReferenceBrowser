@@ -130,6 +130,7 @@
     </ApplicationDefinition>
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Nodes\DocumentNode.cs" />
+    <Compile Include="ViewModels\Nodes\ExtensionMethods.cs" />
     <Compile Include="ViewModels\Nodes\FolderNode.cs" />
     <Compile Include="ViewModels\Nodes\NodeBase.cs" />
     <Compile Include="ViewModels\Nodes\ProjectNode.cs" />

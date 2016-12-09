@@ -58,18 +58,21 @@
                                 <TreeView.Resources>
                                     <HierarchicalDataTemplate DataType="{x:Type node:SolutionNode}" ItemsSource="{Binding ChildNodes}">
                                         <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding IsChecked}"/>
                                             <Image Source="images/16x16/Solution.png"/>
                                             <TextBlock Text="{Binding Name}"/>
                                         </StackPanel>
                                     </HierarchicalDataTemplate>
                                     <HierarchicalDataTemplate DataType="{x:Type node:ProjectNode}" ItemsSource="{Binding ChildNodes}">
                                         <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding IsChecked}"/>
                                             <Image Source="images/16x16/CSharpProject.png"/>
                                             <TextBlock Text="{Binding Name}"/>
                                         </StackPanel>
                                     </HierarchicalDataTemplate>
                                     <HierarchicalDataTemplate DataType="{x:Type node:FolderNode}" ItemsSource="{Binding ChildNodes}">
                                         <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding IsChecked}"/>
                                             <Image x:Name="image" Source="images/16x16/FolderClosed.png"/>
                                             <TextBlock Text="{Binding Name}"/>
                                         </StackPanel>
@@ -82,6 +85,7 @@
                                     </HierarchicalDataTemplate>
                                     <HierarchicalDataTemplate DataType="{x:Type node:DocumentNode}" ItemsSource="{Binding ChildNodes}">
                                         <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding IsChecked}"/>
                                             <Image Source="images/16x16/CSharpFile.png"/>
                                             <TextBlock Text="{Binding Name}"/>
                                         </StackPanel>
